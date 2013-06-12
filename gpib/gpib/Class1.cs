@@ -82,8 +82,8 @@ namespace gpib
                 try
                 {
                 sp.DiscardInBuffer();
-                sp.Write("++addr " + address + "\r\n");
-                sp.Write(y);
+               
+                sp.Write(y + "\r\n");
                 return true;
                      }
             catch (Exception e)
@@ -105,8 +105,7 @@ namespace gpib
                 try
                 {
                     sp.DiscardInBuffer();
-                    sp.Write("++addr " + address + "\r\n");
-                    sp.Write(y);
+                    sp.Write(y + "\r\n");
                    string x = sp.ReadExisting();
 
                     return x;
