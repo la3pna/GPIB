@@ -26,9 +26,7 @@ namespace gpib
             sp.Handshake = Handshake.RequestToSend;
             sp.DtrEnable = true;
 
-            // Error handling
-            sp.DiscardNull = false;
-            sp.ParityReplace = 0;
+           
 
             if (timeout == 0)
             {
