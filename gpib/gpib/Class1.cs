@@ -51,7 +51,7 @@ namespace GPIBlibrary
                 sp.Open();
                 sp.Write("++mode 1" + "\r\n");  // sets mode to controller
                 sp.Write("++read_tmo_ms" + timeout + "\r\n"); // sets timeout 
-                sp.Write("++auto 0" + "\r\n"); 
+                //sp.Write("++auto 0" + "\r\n"); 
                 return true;
 
             }
@@ -62,6 +62,28 @@ namespace GPIBlibrary
             }
 
         }
+
+         public bool address(int address)
+         {
+             if (sp.IsOpen == true)
+             {
+                 try
+                 {
+                     sp.Write("++addr " + address + "\r\n");
+
+                     return true;
+                 }
+                 catch (Exception e)
+                 {
+                     return false;
+                 }
+             }
+             else
+             {
+                 return false;
+             }
+         }
+
         public string read()
         {
             if (sp.IsOpen == true)
