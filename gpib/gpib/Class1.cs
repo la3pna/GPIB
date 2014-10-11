@@ -54,14 +54,36 @@ namespace gpib
         {
             if (sp.IsOpen == true)
             {
-                string y;
+               string yread = "";
                 try
                 {
                     sp.DiscardInBuffer();
                     sp.Write("++read eoi" + "\r\n");
-                    y = sp.ReadExisting();
+                    
+                    DateTime lastRead = DateTime.Now;
+                    TimeSpan elapsedTime = new TimeSpan();
 
-                    return y;
+                    //  timespan
+                    TimeSpan TIMEOUT = new TimeSpan(0, 0, 10);
+
+                    // Read from port until TIMEOUT time has elapsed since
+                    // last successful read
+                    while (TIMEOUT.CompareTo(elapsedTime) > 0)
+                    {
+                        string buffer = sp.ReadExisting();
+                        //buffer = sp.ReadExisting();
+
+                        if (buffer.Length > 0)
+                        {
+                            yread = buffer;
+                           // Console.Write(buffer);
+                            lastRead = DateTime.Now;
+                        }
+                        elapsedTime = DateTime.Now - lastRead;
+                    }
+
+                    return yread;
+                    
                 }
                 catch (Exception e)
                 {
@@ -72,7 +94,10 @@ namespace gpib
             {
                 return "port not open";
             }
+            
         }
+
+
         public Boolean write(int address, string y)
         { // writes data
             if (sp.IsOpen == true)
@@ -97,6 +122,7 @@ namespace gpib
         }
         public string writeread(int address, string y)
         { // writes data, then reads
+            string x="";
 
             if (sp.IsOpen == true)
             {
@@ -104,8 +130,31 @@ namespace gpib
                 {
                     sp.DiscardInBuffer();
                     sp.Write(y + "\r\n");
-                   string x = sp.ReadExisting();
+                   
+                   sp.DiscardInBuffer();
+                   sp.Write("++read eoi" + "\r\n");
 
+                   DateTime lastRead = DateTime.Now;
+                   TimeSpan elapsedTime = new TimeSpan();
+
+                   //  timespan
+                   TimeSpan TIMEOUT = new TimeSpan(0, 0, 10);
+
+                   // Read from port until TIMEOUT time has elapsed since
+                   // last successful read
+                   while (TIMEOUT.CompareTo(elapsedTime) > 0)
+                   {
+                       string buffer = sp.ReadExisting();
+                       //buffer = sp.ReadExisting();
+
+                       if (buffer.Length > 0)
+                       {
+                           x = buffer;
+                           // Console.Write(buffer);
+                           lastRead = DateTime.Now;
+                       }
+                       elapsedTime = DateTime.Now - lastRead;
+                   }
                     return x;
                 }
                 catch (Exception e)
@@ -221,7 +270,7 @@ namespace gpib
                 return false;
             }
         }
-        public bool rst(double x, double y)
+        public bool rst()
         {
             if (sp.IsOpen == true)
             {
@@ -263,7 +312,7 @@ namespace gpib
                 return "port not open";
             }
         }
-        public string[] buspoll(double x, double y)
+        public string[] buspoll()
         {
             if (sp.IsOpen == true)
             {
@@ -293,17 +342,7 @@ namespace gpib
         }
 
 
-        public double Multiplication(double x, double y)
-        {
-            try
-            {
-            }
-            catch (Exception e)
-            {
-
-            }
-            return x * y;
-        }
+        
 
         public string srq()
         {
@@ -325,26 +364,7 @@ namespace gpib
                 return "error";
             }
         }
-        public bool ver(int address)
-        {
-            if (sp.IsOpen == true)
-            {
-                try
-                {
-                    sp.Write("++addr " + address + "\r\n");
-                    sp.Write("++loc" + "\r\n");
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
+        
 
     }
 }
