@@ -4,11 +4,23 @@ using System.Linq;
 using System.Text;
 using System.IO.Ports;
 
-namespace gpib
+namespace GPIBlibrary
 {
-    public class gpib
+    public class GPIB
     {
         SerialPort sp = new SerialPort();
+
+        public List<string> portlist()
+        {
+            List<String> tList = new List<String>();
+            foreach (string s in System.IO.Ports.SerialPort.GetPortNames())
+            {
+                tList.Add(s);
+            }
+
+            tList.Sort();
+            return tList;
+        }
          public Boolean start(string port, int timeout)
         {
              // in order to start the procedure, and connect to the GPIB interface. 
