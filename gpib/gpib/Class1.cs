@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO.Ports;
+using System.Threading;
 
 namespace GPIBlibrary
 {
@@ -138,6 +139,7 @@ namespace GPIBlibrary
             {
                 try
                 {
+                sp.Write("++addr " + address + "\r\n");
                 sp.DiscardInBuffer();
                
                 sp.Write(y + "\r\n");
@@ -162,12 +164,13 @@ namespace GPIBlibrary
             {
                 try
                 {
+                    sp.Write("++addr " + address + "\r\n");
                     sp.DiscardInBuffer();
                     sp.Write(y + "\r\n");
                    
                    sp.DiscardInBuffer();
                    sp.Write("++read eoi" + "\r\n");
-
+                   Thread.Sleep(500);
                    DateTime lastRead = DateTime.Now;
                    TimeSpan elapsedTime = new TimeSpan();
 
